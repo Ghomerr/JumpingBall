@@ -14,8 +14,6 @@ if (keySlow) {
 	isSlow = !isSlow;
 }
 
-
-
 if (!isPreparingJump and !isJumping and keyStartJump) {
 	lineRadius = TILESIZE;
 	isPreparingJump = true;
@@ -29,6 +27,7 @@ if (isPreparingJump and !isJumping and keyEndJump) {
 	isGrounded = false;
 	hsp = (lineX - x) / 10;
 	vsp = (lineY - y) / 10;
+	jumpCount += 1;
 }
 
 // Compute the line jump vector coordinates
@@ -38,17 +37,33 @@ if (isPreparingJump) {
 	
 	// Line vertical margin is between 1 - 4 tile size
 	lineRadius += lineVsp;
+	// Invert the growing direction when max/min is reached
 	if (lineRadius >= TILESIZE * 4 || lineRadius <= TILESIZE) {
 		lineVsp = lineVsp * -1;
+		if (lineRadius >= TILESIZE * 4) {
+			lineColor = c_red;
+		} else {
+			lineColor = c_lime;
+		}
+	} else {
+		if (lineRadius > TILESIZE * 3) {
+			lineColor = c_orange;
+		} else if (lineRadius > TILESIZE * 2) {
+			lineColor = c_yellow;
+		} else {
+			lineColor = c_lime;
+		}
 	}
 	
 	// Move the horizontal coordinates with left/right keys
 	lineHsp = (key_right - key_left);
 	
+	// Stop the line horizontally if the angle exceed the max
 	if (abs(lineAngle + lineHsp * DELTA_PI ) <= (HALF_PI - DELTA_PI)) {
 		lineAngle += lineHsp * DELTA_PI;
 	}
 	
+	// Update line X,Y
 	lineX = x + lineRadius * sin (lineAngle);
 	lineY = y - lineRadius * cos (lineAngle);
 }
@@ -66,15 +81,20 @@ if (!isStopped and (isJumping || isGrounded)) {
 		var bbox_side_hsp = bbox_side_h + /*ceil(hsp);*/ (sign(hsp) > 0 ? ceil(hsp) : ceil(hsp) - 1);
 		if (tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_top) != 0 or 
 			tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_bottom) != 0) {
-			//isStopped = true;
+			
+			// Pixel perfect position of the player 
 			var tileOffset = bbox_side_h == bbox_right ? (TILESIZE - 1) : 0;
 			x = x - (x mod TILESIZE) + tileOffset - (bbox_side_h - x);
+			
+			// Slow horizontal speed
 			hsp = -1 * hsp * 0.8;
 			lastHsp = hsp;
 			
+			// Display hit sprite
 			sprite_index = spPlayerHit;
 			alarm[0] = 10;
 			
+			// Stop the horizontal speed and states
 			if (abs(hsp) <= GRAVITY/2) {
 				hsp = 0;
 				isGrounded = false;
@@ -82,10 +102,13 @@ if (!isStopped and (isJumping || isGrounded)) {
 			}
 			
 		} else {
+			// Player is at the ground
 			if (isGrounded) {
+				// Slow the horizontal speed
 				hsp += (-1 * sign(hsp)) * GRAVITY;
 				x += hsp;
 				
+				// Stop the player
 				if (abs(hsp) <= GRAVITY/2) {
 					hsp = 0;
 					isGrounded = false;
@@ -93,12 +116,11 @@ if (!isStopped and (isJumping || isGrounded)) {
 				}
 				
 			} else {
+				// While jumping, update x
 				x += hsp;
 			}
 			//image_angle -= hsp * 3;
 		}
-		
-		
 	
 		if (isJumping and !isGrounded) {
 			// Handle vertical collisions
@@ -106,129 +128,30 @@ if (!isStopped and (isJumping || isGrounded)) {
 			var bbox_side_vsp = bbox_side_v + /*ceil(vsp);*/ (sign(vsp) > 0 ? ceil(vsp) : ceil(vsp) - 1);
 			if (tilemap_get_at_pixel(tilemap, bbox_right, bbox_side_vsp) != 0 or 
 				tilemap_get_at_pixel(tilemap, bbox_left, bbox_side_vsp) != 0) {
-				//isStopped = true;
+				
+				// Pixel perfect player position
 				var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
 				y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
 
+				// Slow the player on colliding
 				vsp = -1 * vsp * 0.8;
 				hsp *= 0.8;
 				lastVsp = vsp;
 				
+				// Display hit sprite
 				sprite_index = spPlayerHit;
 				alarm[0] = 10;
 		
+				// Player is at the ground
 				if (abs(vsp) <= GRAVITY/2) {
 					vsp = 0;
 					isGrounded = true;
 				}
 			} else {
+				// Update y position while falling
 				vsp += GRAVITY;
 				y += vsp;
 			}
 		}
 	}
-	
-	/*
-	// Collisions
-	movVect = sqrt(sqr(hsp) + sqr(vsp));
-	
-	// PosX and PosY are the coord of the point located on the sprite border
-	// in the direction of the hsp/vsp vector
-	posX = x + hsp * radius / movVect;
-	posY = y + vsp * radius / movVect;
-	
-	// Translate the posX,posY to the origin to compute the rotations
-	tmpPosX = posX - x;
-	tmpPosY = posY - y;
-	
-	// Point from posX,posY 90° counter clockwise
-	posXLeft = (tmpPosX * cos(COLLISION_ANGLE) + tmpPosY * sin(COLLISION_ANGLE)) + x;
-	posYLeft = (-tmpPosX * sin(COLLISION_ANGLE) + tmpPosY * cos(COLLISION_ANGLE)) + y;
-	
-	// Point from posX,posY 90° clockwise
-	posXRight = (tmpPosX * cos(-COLLISION_ANGLE) + tmpPosY * sin(-COLLISION_ANGLE)) + x;
-	posYRight = (-tmpPosX * sin(-COLLISION_ANGLE) + tmpPosY * cos(-COLLISION_ANGLE)) + y;
-	
-	// Check if one of those three points collide the tilemap
-	if (tilemap_get_at_pixel(tilemap, round(posX + hsp), round(posY + vsp)) != 0 or
-		tilemap_get_at_pixel(tilemap, round(posXLeft + hsp), round(posYLeft + vsp)) != 0 or
-		tilemap_get_at_pixel(tilemap, round(posXRight + hsp), round(posYRight + vsp))  != 0) {
-			
-		// Moving the ball next to the collided area
-		while (tilemap_get_at_pixel(tilemap, round(posX), round(posY)) == 0 and
-			   tilemap_get_at_pixel(tilemap, round(posXLeft), round(posYLeft)) == 0 and 
-			   tilemap_get_at_pixel(tilemap, round(posXRight), round(posYRight)) == 0) {
-			
-			x += sign(hsp);
-			y += sign(vsp);
-			
-			// PosX and PosY are the coord of the point located on the sprite border
-			// in the direction of the hsp/vsp vector
-			posX = x + hsp * radius / movVect;
-			posY = y + vsp * radius / movVect;
-			
-			// Translate the posX,posY to the origin to compute the rotations
-			tmpPosX = posX - x;
-			tmpPosY = posY - y;
-	
-			// Point from posX,posY 90° counter clockwise
-			posXLeft = (tmpPosX * cos(COLLISION_ANGLE) + tmpPosY * sin(COLLISION_ANGLE)) + x;
-			posYLeft = (-tmpPosX * sin(COLLISION_ANGLE) + tmpPosY * cos(COLLISION_ANGLE)) + y;
-	
-			// Point from posX,posY 90° clockwise
-			posXRight = (tmpPosX * cos(-COLLISION_ANGLE) + tmpPosY * sin(-COLLISION_ANGLE)) + x;
-			posYRight = (-tmpPosX * sin(-COLLISION_ANGLE) + tmpPosY * cos(-COLLISION_ANGLE)) + y;
-		}
-		
-		// Stop the ball
-		hsp = 0;
-		vsp = 0;
-		isJumping = false;	
-	}
-	*/
 }
-
-
-/*
-// Get inputs
-var key_right = keyboard_check(vk_right);
-var key_left = keyboard_check(vk_left);
-var key_jump = keyboard_check(vk_space);
-
-// Horizontal movement
-hsp = (key_right - key_left) * HORIZONTAL_SPEED;
-
-// Handle horizontal collisions
-var bbox_side_h = hsp > 0 ? bbox_right : bbox_left;
-var bbox_side_hsp = bbox_side_h + hsp;
-if (tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_top) != 0 or 
-	tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_bottom) != 0) {
-	
-	var tileOffset = bbox_side_h == bbox_right ? (TILESIZE - 1) : 0;
-	x = x - (x mod TILESIZE) + tileOffset - (bbox_side_h - x);
-	hsp = 0;
-}
-x += hsp;
-
-
-vsp += GRAVITY;
-
-// Vertical movement
-if (!isJumping and key_jump) {
-	isJumping = true;
-	vsp = -VERTICAL_SPEED;
-}
-
-// Handle vertical collisions
-var bbox_side_v = vsp > 0 ? bbox_bottom : bbox_top;
-var bbox_side_vsp = bbox_side_v + round(vsp);
-if (tilemap_get_at_pixel(tilemap, bbox_right, bbox_side_vsp) != 0 or 
-	tilemap_get_at_pixel(tilemap, bbox_left, bbox_side_vsp) != 0) {
-	
-	var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
-	y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
-	vsp = 0;
-	isJumping = false;
-}
-y += vsp;
-*/

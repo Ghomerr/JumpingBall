@@ -55,6 +55,14 @@
             }
         },
         {
+            "Key": "21ff667b-ba96-419d-9376-e246ba660348",
+            "Value": {
+                "id": "017fb287-0058-468a-bccd-d03c2d078c8e",
+                "resourcePath": "sprites\\spOrangeElectricalDoor\\spOrangeElectricalDoor.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "22628d91-0072-420f-8ab1-c8d7f8852650",
             "Value": {
                 "id": "9c3cd610-74ac-4c35-8208-913674b8c017",
@@ -135,6 +143,14 @@
             }
         },
         {
+            "Key": "79e9cb8b-37db-4516-b777-49fbcf3063a2",
+            "Value": {
+                "id": "36287326-9b28-4f6c-94b6-bdef12a969eb",
+                "resourcePath": "objects\\objOrangeSwitch\\objOrangeSwitch.yy",
+                "resourceType": "GMObject"
+            }
+        },
+        {
             "Key": "8bfcd61a-3809-4c01-94ae-c87f6c52f971",
             "Value": {
                 "id": "bce6c7bf-e0fe-4a89-85e7-8c2d6166a1c7",
@@ -159,10 +175,26 @@
             }
         },
         {
+            "Key": "a34ce4b6-bc6d-44a3-8516-72b6358a56cc",
+            "Value": {
+                "id": "5c10018c-8940-4d5b-a860-d37e5c959c0f",
+                "resourcePath": "sprites\\spPushedSwitch\\spPushedSwitch.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "ace545e3-6362-4c19-93a4-9f76e2d77449",
             "Value": {
                 "id": "216e1b87-18c7-4187-922d-46e2c08fbfcb",
                 "resourcePath": "sprites\\sprCollision\\sprCollision.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
+            "Key": "b75fad0b-b52b-4437-8f06-49f7948efd83",
+            "Value": {
+                "id": "bf68d6fc-7cf0-4059-9267-f1c19c75bc93",
+                "resourcePath": "sprites\\spOrangeSwitch\\spOrangeSwitch.yy",
                 "resourceType": "GMSprite"
             }
         },
@@ -231,11 +263,27 @@
             }
         },
         {
+            "Key": "e98cf66f-e3ca-4799-834c-a741fc9c188e",
+            "Value": {
+                "id": "0ceb8b2e-0655-4e46-bc5b-7aba5e2a35b6",
+                "resourcePath": "sprites\\spOrangeSwitchTransition\\spOrangeSwitchTransition.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "f56f7a55-7e77-419e-b4c0-ae481bb989d2",
             "Value": {
                 "id": "287cda65-39c7-41a0-9380-803e947fb982",
                 "resourcePath": "rooms\\room0\\room0.yy",
                 "resourceType": "GMRoom"
+            }
+        },
+        {
+            "Key": "fc978f69-b14c-40e2-b139-2f2715f439be",
+            "Value": {
+                "id": "685cc34b-6ddc-4005-8371-68d4caf9222f",
+                "resourcePath": "objects\\objOrangeElectricalDoor\\objOrangeElectricalDoor.yy",
+                "resourceType": "GMObject"
             }
         }
     ],

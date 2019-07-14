@@ -1,3 +1,2 @@
-/// @description Insérez la description ici
-// Vous pouvez écrire votre code dans cet éditeur
+// Reset the player sprite
 sprite_index = spPlayer;
