@@ -31,11 +31,27 @@
     },
     "resources": [
         {
+            "Key": "0bf0a3df-6663-4a65-8bc4-359a9ffb9b1f",
+            "Value": {
+                "id": "38e27575-9a15-4464-ba76-399603224b40",
+                "resourcePath": "rooms\\room1\\room1.yy",
+                "resourceType": "GMRoom"
+            }
+        },
+        {
             "Key": "114c8e72-8793-4244-b039-122bcd7f5a10",
             "Value": {
                 "id": "63702396-e623-48da-a6c3-4216793701f5",
                 "resourcePath": "views\\114c8e72-8793-4244-b039-122bcd7f5a10.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "12fe89b0-bc49-4b13-977d-4d122abbda9b",
+            "Value": {
+                "id": "eb75efe2-5ad8-47af-b45e-fc9a1787f822",
+                "resourcePath": "objects\\objEndGame\\objEndGame.yy",
+                "resourceType": "GMObject"
             }
         },
         {
@@ -108,6 +124,14 @@
                 "id": "f606b36e-5440-463f-a60a-2cb80f16bd80",
                 "resourcePath": "objects\\objPlayer\\objPlayer.yy",
                 "resourceType": "GMObject"
+            }
+        },
+        {
+            "Key": "5fc990c8-cfd1-47b2-9699-28c3dbcd2fcf",
+            "Value": {
+                "id": "82ebacdc-0690-4715-bd62-f9b01d1ef84f",
+                "resourcePath": "sprites\\sprEndGame\\sprEndGame.yy",
+                "resourceType": "GMSprite"
             }
         },
         {
