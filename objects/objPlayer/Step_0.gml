@@ -124,16 +124,16 @@ if (!isStopped and isJumping) {
 			// Player collides vertically (=false)
 			playerCollides(false);
 			
-		} else if (isGoingDown and place_meeting(x, y + vspRound, objSmallPlatform)) {
+		} else if (isGoingDown and place_meeting(x, bbox_bottom + vspRound, objSmallPlatform)) {
 			// Handle platform collision
-			
+
 			// Pixel perfect player position
-			while(!place_meeting(x, y - 1, objSmallPlatform)) {
-				y += 1;
-			}
-				
+			var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
+			y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
+
 			// Player collides vertically (=false)
 			playerCollides(false);
+			platformCollide += 1;
 		}
 		
 		// If no collision detected, update player positions

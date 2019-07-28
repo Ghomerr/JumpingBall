@@ -26,3 +26,4 @@ isSlow = false;
 lineColor = c_lime;
 
 jumpCount = 0;
+platformCollide = 0;
