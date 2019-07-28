@@ -1,12 +1,15 @@
 GRAVITY = 0.2;
+HALF_GRAVITY = GRAVITY/2;
 TILESIZE = 16;
+MAX_VSP = 6;
+COLLISION_FACTOR = 0.75;
 
 tilemap = layer_tilemap_get_id("Collisions");
 hsp = 0;
 vsp = 0;
 
+isColliding = false;
 isJumping = false;
-isGrounded = false;
 isPreparingJump = false;
 
 lineX = 0;
@@ -15,9 +18,6 @@ lineRadius = TILESIZE;
 lineAngle = 0;
 lineHsp = 0;
 lineVsp = 1;
-
-lastVsp = 0;
-lastHsp = 0;
 
 frameCounter = 0;
 isStopped = false;

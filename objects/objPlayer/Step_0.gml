@@ -1,7 +1,8 @@
+// Check inputs
 var keyRestart = keyboard_check_pressed(ord("R"));
 var keyStop = keyboard_check_pressed(ord("S"));
 var keySlow = keyboard_check_pressed(ord("F"));
-var keyStartJump = keyboard_check_pressed(vk_space);
+var keyStartJump = keyboard_check(vk_space);
 var keyEndJump = keyboard_check_released(vk_space);
 
 if (keyRestart) {
@@ -14,6 +15,7 @@ if (keySlow) {
 	isSlow = !isSlow;
 }
 
+// Start prepareing jump
 if (!isPreparingJump and !isJumping and keyStartJump) {
 	lineRadius = TILESIZE;
 	isPreparingJump = true;
@@ -21,10 +23,10 @@ if (!isPreparingJump and !isJumping and keyStartJump) {
 	lineY = y - lineRadius;
 	lineVsp = 1;
 }
+// End preparing jump
 if (isPreparingJump and !isJumping and keyEndJump) { 
 	isPreparingJump = false;
 	isJumping = true;
-	isGrounded = false;
 	hsp = (lineX - x) / 10;
 	vsp = (lineY - y) / 10;
 	jumpCount += 1;
@@ -59,7 +61,7 @@ if (isPreparingJump) {
 	lineHsp = (key_right - key_left);
 	
 	// Stop the line horizontally if the angle exceed the max
-	if (abs(lineAngle + lineHsp * DELTA_PI ) <= (HALF_PI - DELTA_PI)) {
+	if (abs(lineAngle + lineHsp * DELTA_PI) <= MAX_ANGLE) {
 		lineAngle += lineHsp * DELTA_PI;
 	}
 	
@@ -68,90 +70,87 @@ if (isPreparingJump) {
 	lineY = y - lineRadius * cos (lineAngle);
 }
 
-
-if (!isStopped and (isJumping || isGrounded)) {
+// While the game is running and player is jumping, update the x,y position
+if (!isStopped and isJumping) {
+	isColliding = false;
 	
-	frameCounter += 1;
+	// Framecounter used to slow per 10 the game speed
+	if (isSlow) {
+		frameCounter += 1;
+	}
 	if (!isSlow || frameCounter % 10 == 0) {
+		if (isSlow) {
+			frameCounter = 0;
+		}
 	
-		frameCounter = 0;
+		/***********************************************************/
+		/***************** HORIZONTAL COLLISIONS *******************/
+		/***********************************************************/
 	
-		// Handle horizontal collisions
+		// Check horizontal collision side
 		var bbox_side_h = hsp > 0 ? bbox_right : bbox_left;
-		var bbox_side_hsp = bbox_side_h + /*ceil(hsp);*/ (sign(hsp) > 0 ? ceil(hsp) : ceil(hsp) - 1);
+		var bbox_side_hsp = bbox_side_h + /*ceil(hsp);*/ (sign(hsp) > 0 ? ceil(hsp) : floor(hsp));
+		
 		if (tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_top) != 0 or 
 			tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_bottom) != 0) {
+			// Handle tilemap collision horizontally
 			
 			// Pixel perfect position of the player 
 			var tileOffset = bbox_side_h == bbox_right ? (TILESIZE - 1) : 0;
 			x = x - (x mod TILESIZE) + tileOffset - (bbox_side_h - x);
 			
-			// Slow horizontal speed
-			hsp = -1 * hsp * 0.8;
-			lastHsp = hsp;
-			
-			// Display hit sprite
-			sprite_index = spPlayerHit;
-			alarm[0] = 10;
-			
-			// Stop the horizontal speed and states
-			if (abs(hsp) <= GRAVITY/2) {
-				hsp = 0;
-				isGrounded = false;
-				isJumping = false;
-			}
-			
-		} else {
-			// Player is at the ground
-			if (isGrounded) {
-				// Slow the horizontal speed
-				hsp += (-1 * sign(hsp)) * GRAVITY;
-				x += hsp;
-				
-				// Stop the player
-				if (abs(hsp) <= GRAVITY/2) {
-					hsp = 0;
-					isGrounded = false;
-					isJumping = false;
-				}
-				
-			} else {
-				// While jumping, update x
-				x += hsp;
-			}
-			//image_angle -= hsp * 3;
+			// Player collides horizontally (=true)
+			playerCollides(true);
 		}
-	
-		if (isJumping and !isGrounded) {
-			// Handle vertical collisions
-			var bbox_side_v = vsp > 0 ? bbox_bottom : bbox_top;
-			var bbox_side_vsp = bbox_side_v + /*ceil(vsp);*/ (sign(vsp) > 0 ? ceil(vsp) : ceil(vsp) - 1);
-			if (tilemap_get_at_pixel(tilemap, bbox_right, bbox_side_vsp) != 0 or 
-				tilemap_get_at_pixel(tilemap, bbox_left, bbox_side_vsp) != 0) {
-				
-				// Pixel perfect player position
-				var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
-				y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
-
-				// Slow the player on colliding
-				vsp = -1 * vsp * 0.8;
-				hsp *= 0.8;
-				lastVsp = vsp;
-				
-				// Display hit sprite
-				sprite_index = spPlayerHit;
-				alarm[0] = 10;
 		
-				// Player is at the ground
-				if (abs(vsp) <= GRAVITY/2) {
-					vsp = 0;
-					isGrounded = true;
-				}
-			} else {
-				// Update y position while falling
-				vsp += GRAVITY;
-				y += vsp;
+		/***********************************************************/
+		/****************** VERTICAL COLLISIONS ********************/
+		/***********************************************************/
+
+		// Check vertical collision side
+		var isGoingDown = vsp > 0;
+		var bbox_side_v = isGoingDown ? bbox_bottom : bbox_top;
+		var vspRound = isGoingDown ? ceil(vsp) : floor(vsp);
+		var bbox_side_vsp = bbox_side_v + vspRound;
+			
+		if (tilemap_get_at_pixel(tilemap, bbox_right, bbox_side_vsp) != 0 or 
+			tilemap_get_at_pixel(tilemap, bbox_left, bbox_side_vsp) != 0) {
+			// Handle tilemap collision vertically
+				
+			// Pixel perfect player position
+			var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
+			y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
+
+			// Player collides vertically (=false)
+			playerCollides(false);
+			
+		} else if (isGoingDown and place_meeting(x, y + vspRound, objSmallPlatform)) {
+			// Handle platform collision
+			
+			// Pixel perfect player position
+			while(!place_meeting(x, y - 1, objSmallPlatform)) {
+				y += 1;
 			}
+				
+			// Player collides vertically (=false)
+			playerCollides(false);
+		}
+		
+		// If no collision detected, update player positions
+		if (!isColliding) {
+			// Update x when no collision is detected
+			x += hsp;
+		
+			// Add gravity to vertical speed
+			vsp += GRAVITY;
+				
+			// Handle max velocity
+			if (vsp > MAX_VSP) {
+				vsp = MAX_VSP;	
+			}
+				
+			// Update y when no collision detected
+			y += vsp;
 		}
 	}
 }

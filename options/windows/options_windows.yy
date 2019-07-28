@@ -11,7 +11,7 @@
     "option_windows_description_info": "Jumping Ball Game",
     "option_windows_disable_sandbox": false,
     "option_windows_display_cursor": false,
-    "option_windows_display_name": "Jumpinh Ball",
+    "option_windows_display_name": "Jumping Ball",
     "option_windows_enable_steam": false,
     "option_windows_executable_name": "${project_name}",
     "option_windows_icon": "${base_options_dir}\\windows\\icons\\icon.ico",

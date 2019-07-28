@@ -87,6 +87,14 @@
             }
         },
         {
+            "Key": "26e7dca1-1f76-4fc5-ac5e-feb0d755fdb3",
+            "Value": {
+                "id": "8b65a7b7-03f1-4f49-b6dc-cf390f4bfc7d",
+                "resourcePath": "sprites\\sprSmallPlatform\\sprSmallPlatform.yy",
+                "resourceType": "GMSprite"
+            }
+        },
+        {
             "Key": "2fd8c0bc-44ce-4e27-9593-aebed16e57f0",
             "Value": {
                 "id": "786dab12-b3c0-4815-9374-a1a1525db6a6",
@@ -148,6 +156,14 @@
                 "id": "c7106816-ca15-4648-a8e8-4c8bba5f1690",
                 "resourcePath": "views\\6ea127b4-42f3-4e3c-b8e5-0badd10f4120.yy",
                 "resourceType": "GMFolder"
+            }
+        },
+        {
+            "Key": "6f51f5bf-007c-4e42-bf29-914c7ecbc18f",
+            "Value": {
+                "id": "308cc0c6-fea2-4e07-8e17-5e0721e8227d",
+                "resourcePath": "scripts\\playerCollides\\playerCollides.yy",
+                "resourceType": "GMScript"
             }
         },
         {
@@ -295,6 +311,14 @@
             }
         },
         {
+            "Key": "eb423f33-7f14-47b7-9cd8-235d4f96812b",
+            "Value": {
+                "id": "e1136534-59a5-4583-bf07-a947e96da818",
+                "resourcePath": "objects\\objSmallPlatform\\objSmallPlatform.yy",
+                "resourceType": "GMObject"
+            }
+        },
+        {
             "Key": "f56f7a55-7e77-419e-b4c0-ae481bb989d2",
             "Value": {
                 "id": "287cda65-39c7-41a0-9380-803e947fb982",
@@ -312,7 +336,8 @@
         }
     ],
     "script_order": [
-        "70f25e54-5984-4d8c-b727-68b6d9a50a92"
+        "70f25e54-5984-4d8c-b727-68b6d9a50a92",
+        "6f51f5bf-007c-4e42-bf29-914c7ecbc18f"
     ],
     "tutorial": ""
 }
