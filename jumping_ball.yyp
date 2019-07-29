@@ -87,14 +87,6 @@
             }
         },
         {
-            "Key": "26e7dca1-1f76-4fc5-ac5e-feb0d755fdb3",
-            "Value": {
-                "id": "8b65a7b7-03f1-4f49-b6dc-cf390f4bfc7d",
-                "resourcePath": "sprites\\sprSmallPlatform\\sprSmallPlatform.yy",
-                "resourceType": "GMSprite"
-            }
-        },
-        {
             "Key": "2fd8c0bc-44ce-4e27-9593-aebed16e57f0",
             "Value": {
                 "id": "786dab12-b3c0-4815-9374-a1a1525db6a6",
@@ -231,6 +223,14 @@
             }
         },
         {
+            "Key": "b6fe6570-9ec8-4eab-b611-02dc05dd5384",
+            "Value": {
+                "id": "502f81c1-3cce-449e-be59-2e2e759433aa",
+                "resourcePath": "tilesets\\tsPlatforms\\tsPlatforms.yy",
+                "resourceType": "GMTileSet"
+            }
+        },
+        {
             "Key": "b75fad0b-b52b-4437-8f06-49f7948efd83",
             "Value": {
                 "id": "bf68d6fc-7cf0-4059-9267-f1c19c75bc93",
@@ -311,19 +311,19 @@
             }
         },
         {
-            "Key": "eb423f33-7f14-47b7-9cd8-235d4f96812b",
-            "Value": {
-                "id": "e1136534-59a5-4583-bf07-a947e96da818",
-                "resourcePath": "objects\\objSmallPlatform\\objSmallPlatform.yy",
-                "resourceType": "GMObject"
-            }
-        },
-        {
             "Key": "f56f7a55-7e77-419e-b4c0-ae481bb989d2",
             "Value": {
                 "id": "287cda65-39c7-41a0-9380-803e947fb982",
                 "resourcePath": "rooms\\room0\\room0.yy",
                 "resourceType": "GMRoom"
+            }
+        },
+        {
+            "Key": "f894d2cd-e95f-4d6b-8ce3-24c932ba6340",
+            "Value": {
+                "id": "3a70971f-1346-41fa-915d-110fcef18d83",
+                "resourcePath": "sprites\\sprPlatform\\sprPlatform.yy",
+                "resourceType": "GMSprite"
             }
         },
         {

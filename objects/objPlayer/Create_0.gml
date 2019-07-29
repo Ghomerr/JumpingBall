@@ -5,12 +5,15 @@ MAX_VSP = 6;
 COLLISION_FACTOR = 0.75;
 
 tilemap = layer_tilemap_get_id("Collisions");
+pfTilemap = layer_tilemap_get_id("Platforms");
+
 hsp = 0;
 vsp = 0;
 
 isColliding = false;
 isJumping = false;
 isPreparingJump = false;
+isPassingThroughPlatform = false;
 
 lineX = 0;
 lineY = 0;

@@ -78,7 +78,7 @@ if (!isStopped and isJumping) {
 	if (isSlow) {
 		frameCounter += 1;
 	}
-	if (!isSlow || frameCounter % 10 == 0) {
+	if (!isSlow || frameCounter % 20 == 0) {
 		if (isSlow) {
 			frameCounter = 0;
 		}
@@ -93,14 +93,8 @@ if (!isStopped and isJumping) {
 		
 		if (tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_top) != 0 or 
 			tilemap_get_at_pixel(tilemap, bbox_side_hsp, bbox_bottom) != 0) {
-			// Handle tilemap collision horizontally
-			
-			// Pixel perfect position of the player 
-			var tileOffset = bbox_side_h == bbox_right ? (TILESIZE - 1) : 0;
-			x = x - (x mod TILESIZE) + tileOffset - (bbox_side_h - x);
-			
 			// Player collides horizontally (=true)
-			playerCollides(true);
+			playerCollides(true, bbox_side_h);
 		}
 		
 		/***********************************************************/
@@ -112,28 +106,35 @@ if (!isStopped and isJumping) {
 		var bbox_side_v = isGoingDown ? bbox_bottom : bbox_top;
 		var vspRound = isGoingDown ? ceil(vsp) : floor(vsp);
 		var bbox_side_vsp = bbox_side_v + vspRound;
+		var bbox_bottom_vsp = bbox_bottom + vspRound;
 			
 		if (tilemap_get_at_pixel(tilemap, bbox_right, bbox_side_vsp) != 0 or 
 			tilemap_get_at_pixel(tilemap, bbox_left, bbox_side_vsp) != 0) {
-			// Handle tilemap collision vertically
-				
-			// Pixel perfect player position
-			var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
-			y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
-
 			// Player collides vertically (=false)
-			playerCollides(false);
+			playerCollides(false, bbox_side_v);
 			
-		} else if (isGoingDown and place_meeting(x, bbox_bottom + vspRound, objSmallPlatform)) {
-			// Handle platform collision
+		} else if (tilemap_get_at_pixel(pfTilemap, bbox_right, bbox_bottom_vsp) != 0 or 
+			tilemap_get_at_pixel(pfTilemap, bbox_left, bbox_bottom_vsp) != 0) {
 
-			// Pixel perfect player position
-			var tileOffset = bbox_side_v == bbox_bottom ? (TILESIZE - 1) : 0;
-			y = y - (y mod TILESIZE) + tileOffset - (bbox_side_v - y);
-
-			// Player collides vertically (=false)
-			playerCollides(false);
-			platformCollide += 1;
+			// If the player doesn't alreay collide the platform
+			if (!isPassingThroughPlatform) {
+				// If player is falling
+				if (isGoingDown) {
+					// Player collides vertically (=false)
+					playerCollides(false, bbox_side_v);
+				
+				} else {
+					// Player's colliding from beneath
+					isPassingThroughPlatform = true;
+				}
+			}
+			
+			// In other cases, the player is passing through the platform
+			// We wait untill the player is comlpetely above it to handle the collision
+			
+		} else if (isPassingThroughPlatform) {
+			// No more collision with platform
+			isPassingThroughPlatform = false;
 		}
 		
 		// If no collision detected, update player positions
